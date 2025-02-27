@@ -1,44 +1,72 @@
 import React, { useEffect } from "react";
 import { useProduct } from "../contexts/ProductContext";
-import { NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 
 const Category = () => {
   const { categoryName } = useParams();
-  const { data, setShowCategory } = useProduct();
+  const { data, isLoading, setCartItems, cartItems, setShowDesc} =
+    useProduct();
 
   const filteredProducts = data.filter((p) => p.category === categoryName);
 
-  {
-    console.log(categoryName);
-  }
+  const handleAddToCart = (id) => {
+    setCartItems([...cartItems, id]);
+  };
 
-  console.log("asdasd", filteredProducts);
+
+
+  if (isLoading)
+    return (
+      <>
+        <div className="flex flex-wrap gap-[25px]">
+          {Array(10)
+            .fill(0)
+            .map((_, index) => (
+              <div
+                key={index}
+                className="w-1/4 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70 animate-pulse"
+              >
+                <div className="h-48 w-full bg-gray-200"></div>
+                <div className="p-4 md:p-5 space-y-3">
+                  <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
+                  <div className="h-3 w-1/2 bg-gray-200 rounded"></div>
+                  <div className="h-8 w-32 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+            ))}
+        </div>
+      </>
+    );
   return (
     <div>
       {filteredProducts.length > 0 ? (
-        <div className="flex flex-wrap gap-5">
+        <div className="flex flex-wrap gap-6">
           {filteredProducts.map((item) => (
-            <div className="w-64 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 light:border-neutral-700 light:shadow-neutral-700/70">
-              <img className="w-full h-auto rounded-t-xl" src={item.image} />
+            <div className="w-64 flex flex-col bg-white border border-gray-300 shadow-md rounded-xl">
+              <img className="h-48 w-96 object-scale-down" src={item.image} />
               <div className="p-4 md:p-5">
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-gray-500 dark:text-neutral-400">
-                  {/* {item.rating.rate} */}
-                </p>
-                <a
-                  className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                  href="#"
+                <NavLink
+                  to={`/products/description/${item.id}`}
+                  onClick={() => setShowDesc(true)}
                 >
-                  Go somewhere
-                </a>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {item.title}
+                  </h3>
+                </NavLink>
+                <p className="mt-1 text-gray-600">{item.rating?.rate} </p>
+                <h1>${item.price}</h1>
+                <button
+                  className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
+                  onClick={() => handleAddToCart(item.id)}
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <p>No products found.</p>
+        <p className="text-gray-600 text-center mt-4">No products found.</p>
       )}
     </div>
   );

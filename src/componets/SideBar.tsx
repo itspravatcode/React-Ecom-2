@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useProduct } from "../contexts/ProductContext";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data = [], setShowCategory , showCategory} = useProduct();
+  const { data = [], setShowCategory, showCategory } = useProduct();
   const categories = [...new Set(data.map((p) => p.category))];
+  const location = useLocation();
 
   return (
     <>
@@ -32,14 +33,24 @@ const SideBar = () => {
         aria-label="Sidebar"
       >
         <div className="relative flex flex-col h-full max-h-full">
-          {/* Header */}
-
-          {/* End Header */}
-
           {/* Body */}
           <nav className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-gray-100 scrollbar-thumb-gray-300">
             <div className="pb-0 px-2 w-full flex flex-col flex-wrap">
               <ul className="space-y-1">
+                <Link
+                  className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
+                  to="/cart"
+                >
+                  Cart
+                </Link>
+                {location.pathname !== "/" && (
+                  <Link
+                    className="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:bg-blue-600 disabled:opacity-50 disabled:pointer-events-none"
+                    to="/"
+                  >
+                    Home
+                  </Link>
+                )}
                 {categories.map((category) => (
                   <NavLink to={`/category/${category}`}>
                     <div
@@ -47,7 +58,6 @@ const SideBar = () => {
                       key={category}
                       onClick={() => setShowCategory(true)}
                     >
-                  
                       <svg
                         className="size-4"
                         viewBox="0 0 24 24"

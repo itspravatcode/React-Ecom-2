@@ -1,5 +1,10 @@
-
-import React, { createContext, useContext, useState, ReactNode, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useMemo,
+} from "react";
 
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +23,11 @@ interface ProductContextType {
   isLoading: boolean;
   showCategory: boolean;
   setShowCategory: (value: boolean) => void;
+  cartItems: Product[];
+  setCartItems: (value: Product[]) => void;
+  showDesc:boolean;
+  setShowDesc: (value: boolean) => void;
+  
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -40,12 +50,17 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
   const [showCategory, setShowCategory] = useState(false);
 
+  const [cartItems, setCartItems] = useState([]);
+  const [showDesc, setShowDesc] = useState(false);
+
   const value = useMemo(
-    () => ({ data, isLoading, showCategory, setShowCategory }),
-    [data, isLoading, showCategory]
+    () => ({ data, isLoading, showCategory, setShowCategory, cartItems,setCartItems,showDesc,setShowDesc }),
+    [data, isLoading, showCategory,cartItems,showDesc]
   );
 
-  return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+  return (
+    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
+  );
 };
 
 export const useProduct = () => {
