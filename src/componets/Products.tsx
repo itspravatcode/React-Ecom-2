@@ -1,15 +1,16 @@
 import React from "react";
 import { useProduct } from "../contexts/ProductContext";
+import { Outlet } from "react-router-dom";
 
 const Products = () => {
-  const { data, isLoading } = useProduct();
+  const { data=[], isLoading,showCategory } = useProduct();
 
   if (isLoading) return <p>Loading...</p>;
   console.log(data);
 
   return (
     <div className="flex flex-wrap gap-5">
-      {data.map((item) => (
+    {data.map((item) => (
          <div className="w-64 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-900 light:border-neutral-700 light:shadow-neutral-700/70">
          <img
            className="w-full h-auto rounded-t-xl"
